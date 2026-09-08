@@ -5,7 +5,7 @@ import WebKit
 
 @MainActor final class LullyState: ObservableObject {
     @Published var theme = UserDefaults.standard.string(forKey: "theme") ?? "system"
-    @Published var opacity = min(1.0, max(0.3, UserDefaults.standard.object(forKey: "opacity") as? Double ?? 1.0))
+    @Published var opacity = min(1.0, max(0.1, UserDefaults.standard.object(forKey: "opacity") as? Double ?? 1.0))
     @Published var captureProtection = true
     @Published var screenAccess = CGPreflightScreenCaptureAccess()
     @Published var turns: [ConversationTurn] = []
@@ -245,6 +245,13 @@ import WebKit
 final class OverlayPanel: NSPanel {
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { false }
+    override func sendEvent(_ event: NSEvent) {
+        if event.type == .leftMouseDown {
+            NSApp.activate(ignoringOtherApps: true)
+            makeKey()
+        }
+        super.sendEvent(event)
+    }
 }
 
 @MainActor final class AppDelegate: NSObject, NSApplicationDelegate {
@@ -258,7 +265,7 @@ final class OverlayPanel: NSPanel {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
-        panel = OverlayPanel(contentRect: NSRect(x: 100, y: 180, width: 480, height: 680), styleMask: [.borderless, .resizable, .nonactivatingPanel], backing: .buffered, defer: false)
+        panel = OverlayPanel(contentRect: NSRect(x: 100, y: 180, width: 480, height: 680), styleMask: [.borderless, .resizable], backing: .buffered, defer: false)
         mover.panel = panel
         applyTheme()
         panel.alphaValue = state.opacity
@@ -276,6 +283,7 @@ final class OverlayPanel: NSPanel {
         // Best-effort legacy protection. ScreenCaptureKit recorders may ignore this.
         applyCaptureProtection()
         webBridge = PanelBridge(state: state, host: self)
+        panel.ignoresMouseEvents = false
         panel.isOpaque = false
         panel.backgroundColor = .clear
         panel.hasShadow = true
@@ -311,7 +319,7 @@ final class OverlayPanel: NSPanel {
         shortcuts.onAction = { [weak self] action in
             if action >= 10 {
                 guard let self else { return }
-                self.setOpacity(self.state.opacity + ([10, 12, 13].contains(action) ? 0.05 : -0.05))
+                self.setOpacity(self.state.opacity + ([10, 12, 13].contains(action) ? 0.10 : -0.10))
             } else if action == 9 { self?.focusInput() } else if action == 8 { self?.freshChat() } else if action == 1 { self?.toggle() } else if action == 2 { self?.togglePin() } else { self?.captureAssist() }
         }
         shortcuts.onMovement = { [weak self] direction, pressed in self?.mover.key(direction, pressed: pressed) }
@@ -323,7 +331,7 @@ final class OverlayPanel: NSPanel {
 
     func setOpacity(_ value: Double) {
         guard value.isFinite else { return }
-        state.opacity = min(1, max(0.3, (value * 100).rounded() / 100))
+        state.opacity = min(1, max(0.1, (value * 100).rounded() / 100))
         panel.alphaValue = state.opacity
         UserDefaults.standard.set(state.opacity, forKey: "opacity")
         webBridge.sendState()

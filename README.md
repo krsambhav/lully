@@ -15,7 +15,7 @@ Open **Settings → Intelligence** and add your API key. Release downloads conta
 - **My Audio:** transcribes your microphone. **Media Audio:** transcribes computer sound. Selecting the other source switches listening; one source is active at a time.
 - **Fresh chat:** clears conversation and capture context, cancels the answer, and stops listening. History otherwise remains for the current app session.
 - **Capture protection:** requests exclusion from recordings. It can be turned off in General and resets to enabled on launch. Modern recorders may ignore it; universal invisibility is not guaranteed.
-- **Window opacity:** adjust from 30–100% in General. The shortcut changes it by 5%; the setting persists across launches.
+- **Window opacity:** adjust from 10–100% in General. The shortcut changes it by 10%; the setting persists across launches.
 - **Light / Dark / System:** select a theme in General. Settings opens inside the overlay with Command–Comma.
 
 | Action | Shortcut |

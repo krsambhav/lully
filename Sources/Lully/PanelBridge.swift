@@ -2,6 +2,11 @@ import AppKit
 import WebKit
 import Combine
 
+final class LullyWebView: WKWebView {
+    // The first click should focus the intended control, including when the app is inactive.
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
+}
+
 @MainActor final class PanelBridge: NSObject, WKScriptMessageHandler, WKNavigationDelegate {
     let webView: WKWebView
     private let state: LullyState
@@ -19,7 +24,7 @@ import Combine
         self.host = host
         let config = WKWebViewConfiguration()
         config.websiteDataStore = .nonPersistent()
-        webView = WKWebView(frame: .zero, configuration: config)
+        webView = LullyWebView(frame: .zero, configuration: config)
         webView.focusRingType = .none
         super.init()
         config.userContentController.add(self, name: "lully")
