@@ -1,0 +1,14 @@
+.build/
+build/
+.DS_Store
+ui/node_modules/
+ui/dist/
+
+.local-secrets/
+
+releases/
+.swiftpm/
+*.p12
+*.keychain-db
+.env
+.env.*
