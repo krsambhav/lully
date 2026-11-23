@@ -287,8 +287,8 @@ final class OverlayPanel: NSPanel {
         panel.isOpaque = false
         panel.backgroundColor = .clear
         panel.hasShadow = true
-        panel.contentView = PanelContainerView(webView: webBridge.webView)
-        panel.minSize = NSSize(width: 420, height: 560)
+        panel.contentView = PanelContainerView(webView: webBridge.webView) { [weak self] in self?.resizer.stop(); self?.mover.stop() }
+        panel.minSize = NSSize(width: 320, height: 300)
         panel.setFrameAutosaveName("LullyOverlayV2")
         panel.makeKeyAndOrderFront(nil)
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)

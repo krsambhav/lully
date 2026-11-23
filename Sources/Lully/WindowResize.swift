@@ -1,6 +1,19 @@
 import AppKit
 
 struct WindowResize {
+    static func dragged(_ frame: CGRect, dx: CGFloat, dy: CGFloat, horizontal: Int, vertical: Int, minimum: CGSize) -> CGRect {
+        var result = frame
+        if horizontal != 0 {
+            result.size.width = max(minimum.width, frame.width + dx * CGFloat(horizontal))
+            if horizontal < 0 { result.origin.x = frame.maxX - result.width }
+        }
+        if vertical != 0 {
+            result.size.height = max(minimum.height, frame.height + dy * CGFloat(vertical))
+            if vertical < 0 { result.origin.y = frame.maxY - result.height }
+        }
+        return result
+    }
+
     static func frame(_ frame: CGRect, factor: CGFloat, minimum: CGSize, visible: CGRect) -> CGRect {
         let width = min(visible.width, max(minimum.width, frame.width * factor))
         let height = min(visible.height, max(minimum.height, frame.height * factor))

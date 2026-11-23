@@ -63,3 +63,7 @@ Checks cover provider protocols, Realtime events, explicit image input, history,
 Live OpenAI smoke tests for arithmetic, image input, and follow-up context have passed. These are not broad accuracy or latency benchmarks. `Lully.app/Contents/MacOS/Lully --test-openai` runs those API-backed checks with the configured key.
 
 Chat history is not persisted across app restarts. Extended audio transcription and recording exclusion should be tested with your actual setup.
+
+Drag any window edge or corner to resize freely; width and height are independent. The minimum is 320 × 300 points, and your chosen frame is saved.
+
+The keyboard button in the top bar opens a complete shortcut reference, including your customized bindings and a link to shortcut settings.
